@@ -22,7 +22,7 @@ function draw() {
   }
 
   for (var i = 0; x_coord(i, j, u) < cWidth + 2 * u; i++) {
-    for (var j = 0; y_coord(j, u) < cHeight; j++) {
+    for (var j = 0; y_coord(j, u) < cHeight + 2 * u; j++) {
       var x = x_coord(i, j, u);
       var y = y_coord(j, u);
 
