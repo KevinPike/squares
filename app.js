@@ -8,24 +8,95 @@ function draw() {
   var cWidth = c.width;
 
   var ctx = c.getContext("2d");
-  var u = 15;
 
-  drawSquares(cHeight, cWidth, ctx, u);
+  drawSquares(cHeight, cWidth, ctx);
 }
 
-function drawSquareInSquare(cHeight, cWidth, ctx, u) {
-  let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
-  let x = u * 10; y = u * 10;
+// dark, middle, light
+const colors = ['#3583C1', '#3A90D5', '#45ADFF'];
 
-  drawShape(ctx, x, y, u, [
-    [0, 0],
-    [-5, 3],
-    [-3, 4],
-    [0, 2],
-    [3, 4],
-    [5, 3],
-    [0, 0],
-  ], colors[1]);
+const u = 15;
+const theta = Math.PI/6;
+const adjacent = 2;
+const opposite = adjacent * Math.tan(theta);
+const hypotenuse = Math.sqrt(adjacent * adjacent + opposite * opposite);
+
+function rotate(points, theta) {
+  return points.map(function(point) {
+    const x = point[0];
+    const y = point[1];
+    return [
+      x * Math.cos(theta) - y * Math.sin(theta),
+      y * Math.cos(theta) + x * Math.sin(theta)
+    ];
+  });
+}
+
+function drawSquareInSquare(cHeight, cWidth, ctx) {
+
+  const outerX = adjacent * 3;
+
+  let rowsDrawn = 0;
+  for (let y = 0; y < cHeight; y += (3 * hypotenuse + outerX * Math.sin(theta)) * u) {
+    for (let x = 0 + (rowsDrawn % 2) * - outerX * u; x < cWidth; x += outerX * 2 * u) {
+      const outer = [
+        [0, 0],
+        [outerX, -3*opposite],
+        [outerX*2, 0],
+        [adjacent*5, opposite],
+        [outerX, -opposite],
+        [adjacent, opposite],
+        [0, 0]
+      ];
+
+      // top
+      drawShape(ctx, x, y, u, outer, colors[0]);
+      // right
+      drawShape(ctx, x + adjacent*6*u, y, u, rotate(outer, 2/3 * Math.PI), colors[1]);
+      // left
+      drawShape(ctx, x + outerX*u, y+9*opposite*u, u, rotate(outer, 4/3 * Math.PI), colors[2]);
+
+      const innerX = Math.sqrt(Math.pow(2 * hypotenuse, 2) - Math.pow(hypotenuse, 2));
+
+      const inner = [
+        [0, 0],
+        [innerX, -hypotenuse],
+        [innerX, 0],
+        [hypotenuse * Math.sin(2 * theta), hypotenuse * Math.cos(2 * theta)],
+        [hypotenuse * Math.sin(2 * theta), 2 * hypotenuse - hypotenuse * Math.cos(2 * theta)],
+        [0, 2 * hypotenuse],
+        [0, 0]
+      ];
+
+      // left
+      drawShape(ctx, x + adjacent * u, y + opposite * u, u, inner, colors[1]);
+      // right
+      drawShape(ctx, x + (adjacent + innerX * 2) * u, y + opposite * u, u, rotate(inner, 2/3 * Math.PI), colors[2]);
+      // bottom
+      drawShape(ctx, x + (adjacent + innerX) * u, y + (3 *  hypotenuse + opposite) * u, u, rotate(inner, 4/3 * Math.PI), colors[0]);
+
+      const squareFace = [
+        [0, 0],
+        [adjacent, opposite],
+        [2*adjacent, 0],
+        [adjacent, -opposite],
+        [0, 0]
+      ];
+
+      // top
+      const squareShiftX = (2 * adjacent)
+      drawShape(ctx, x + squareShiftX * u, y + hypotenuse * u, u, squareFace, colors[0]);
+      // left
+      drawShape(ctx, x + squareShiftX * u, y + hypotenuse * u, u, rotate(squareFace, 1/3 * Math.PI), colors[2]);
+      // right
+      drawShape(ctx, x + squareShiftX * u + adjacent * 2 * u, y + hypotenuse * u, u, rotate(squareFace, 2/3 * Math.PI), colors[1]);
+
+      if (y % 2 == 1) {
+        x += outerX * u;
+      }
+    }
+    rowsDrawn++;
+  }
 }
 
 function drawShape(ctx, x, y, u, points, fill) {
@@ -43,48 +114,37 @@ function drawShape(ctx, x, y, u, points, fill) {
   ctx.fill();
 }
 
-function drawSquares(cHeight, cWidth, ctx, u) {
-  function x_coord(i, j, u) {
+function drawSquares(cHeight, cWidth, ctx) {
+  function x_coord(i, j) {
     if (!j) {
       j = 0;
     }
-    return 0 + i * u * 4 + (j % 2) * -2 * u;
+    return i * u * 2 * adjacent + (j % 2) * -adjacent * u;
   }
 
-  function y_coord(j, u) {
-    return 0 + j * u * 3;
+  function y_coord(j) {
+    return j * u * (hypotenuse * (1 + Math.cos(2 * theta)));
   }
 
-  for (var i = 0; x_coord(i, j, u) < cWidth + 2 * u; i++) {
-    for (var j = 0; y_coord(j, u) < cHeight + 2 * u; j++) {
-      var x = x_coord(i, j, u);
-      var y = y_coord(j, u);
+  for (var i = 0; x_coord(i, j) < cWidth + 2 * u; i++) {
+    for (var j = 0; y_coord(j) < cHeight + 2 * u; j++) {
+      var x = x_coord(i, j);
+      var y = y_coord(j);
 
-      let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
-
-      drawShape(ctx, x, y, u, [
+      const squareFace = [
         [0, 0],
-        [2, 1],
-        [4, 0],
-        [2, -1],
+        [adjacent, opposite],
+        [2*adjacent, 0],
+        [adjacent, -opposite],
         [0, 0]
-      ], colors[0]);
+      ];
 
-      drawShape(ctx, x, y, u, [
-        [0, 0],
-        [2, 1],
-        [2, 3],
-        [0, 2],
-        [0, 0]
-      ], colors[2]);
-
-      drawShape(ctx, x, y, u, [
-        [4, 0],
-        [4, 2],
-        [2, 3],
-        [2, 1],
-        [4, 0]
-      ], colors[1]);
+      // top
+      drawShape(ctx, x, y, u, squareFace, colors[0]);
+      // left
+      drawShape(ctx, x, y, u, rotate(squareFace, 1/3 * Math.PI), colors[2]);
+      // right
+      drawShape(ctx, x+adjacent * 2 * u, y, u, rotate(squareFace, 2/3 * Math.PI), colors[1]);
     }
   }
 }
