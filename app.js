@@ -1,5 +1,6 @@
 
 let clickCounter = 0;
+let u = 15;
 function draw() {
   var c = document.getElementById("myCanvas");
 
@@ -21,6 +22,7 @@ function draw() {
 
   c.onclick = function() {
     clickCounter++;
+    u += 5 * Math.cos(Math.PI * (clickCounter % 4) / 3);
     drawUsingClickCounter();
   }
 
@@ -31,7 +33,6 @@ function draw() {
 const colors = ['#1b2e65','#4a6cce', '#9aade4'];
 const strokeColor = colors[0];
 
-const u = 15;
 const theta = Math.PI/6;
 const adjacent = 2;
 const opposite = adjacent * Math.tan(theta);
