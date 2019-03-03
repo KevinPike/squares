@@ -17,34 +17,27 @@ function drawSquareInSquare(cHeight, cWidth, ctx, u) {
   let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
   let x = u * 10; y = u * 10;
 
-  drawShape(ctx, [
-    [x,y],
-    [-5*u+x, 3*u+y],
-    [-3*u+x, 4*u+y],
-    [x,2*u+y],
-    [3*u+x,4*u+y],
-    [5*u+x, 3*u+y],
-    [x,y],
+  drawShape(ctx, x, y, [
+    [0,0],
+    [-5*u, 3*u],
+    [-3*u, 4*u],
+    [0,2*u],
+    [3*u,4*u],
+    [5*u, 3*u],
+    [0,0],
   ], colors[1]);
 }
 
-function twoDPointFunc(func, point) {
-  if (!point.length || point.length != 2 || !func) {
-    return;
-  }
-  func(point[0], point[1]);
-}
-
-function drawShape(ctx, points, fill) {
+function drawShape(ctx, x, y, points, fill) {
   if (!points.length) {
     return;
   }
 
   ctx.beginPath();
   ctx.fillStyle = fill;
-  twoDPointFunc(ctx.moveTo.bind(ctx), points[0]);
+  ctx.moveTo(points[0][0] + x, points[0][1] + y);
   for (var i = 1; i < points.length; i++) {
-    twoDPointFunc(ctx.lineTo.bind(ctx), points[i]);
+    ctx.lineTo(points[i][0] + x, points[i][1] + y);
   }
   ctx.closePath();
   ctx.fill();
@@ -69,28 +62,28 @@ function drawSquares(cHeight, cWidth, ctx, u) {
 
       let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
 
-      drawShape(ctx, [
-        [x, y],
-        [2 * u + x, u + y],
-        [4 * u + x, y],
-        [2 * u + x, y - u],
-        [x, y]
+      drawShape(ctx, x, y, [
+        [0, 0],
+        [2 * u, u],
+        [4 * u, 0],
+        [2 * u, -u],
+        [0, 0]
       ], colors[0]);
 
-      drawShape(ctx, [
-        [x, y],
-        [2 * u + x, u + y],
-        [2 * u + x, 3 * u + y],
-        [x, 2 * u + y],
-        [x, y]
+      drawShape(ctx, x, y, [
+        [0, 0],
+        [2 * u, u],
+        [2 * u, 3 * u],
+        [0, 2 * u],
+        [0, 0]
       ], colors[2]);
 
-      drawShape(ctx, [
-        [4 * u + x, y],
-        [4 * u + x, 2 * u + y],
-        [2 * u + x, 3 * u + y],
-        [2 * u + x, 1 * u + y],
-        [4 * u + x, y]
+      drawShape(ctx, x, y, [
+        [4 * u, 0],
+        [4 * u, 2 * u],
+        [2 * u, 3 * u],
+        [2 * u, 1 * u],
+        [4 * u, 0]
       ], colors[1]);
     }
   }
