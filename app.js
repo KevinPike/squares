@@ -1,4 +1,5 @@
 
+let clickCounter = 0;
 function draw() {
   var c = document.getElementById("myCanvas");
 
@@ -9,11 +10,25 @@ function draw() {
 
   var ctx = c.getContext("2d");
 
-  drawSquares(cHeight, cWidth, ctx);
+  function drawUsingClickCounter() {
+    if (clickCounter % 2) {
+      drawSquareInSquare(cHeight, cWidth, ctx);
+      return;
+    }
+
+    drawSquares(cHeight, cWidth, ctx);
+  }
+
+  c.onclick = function() {
+    clickCounter++;
+    drawUsingClickCounter();
+  }
+
+  drawUsingClickCounter();
 }
 
 // dark, middle, light
-const colors = ['#3583C1', '#3A90D5', '#45ADFF'];
+const colors = ['#1b2e65','#4a6cce', '#9aade4'];
 
 const u = 15;
 const theta = Math.PI/6;
@@ -37,7 +52,8 @@ function drawSquareInSquare(cHeight, cWidth, ctx) {
   const outerX = adjacent * 3;
 
   let rowsDrawn = 0;
-  for (let y = 0; y < cHeight; y += (3 * hypotenuse + outerX * Math.sin(theta)) * u) {
+  const yDistanceApart = (3 * hypotenuse + outerX * Math.sin(theta)) * u;
+  for (let y = 0; y < cHeight + yDistanceApart; y += yDistanceApart) {
     for (let x = 0 + (rowsDrawn % 2) * - outerX * u; x < cWidth; x += outerX * 2 * u) {
       const outer = [
         [0, 0],
