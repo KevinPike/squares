@@ -29,6 +29,7 @@ function draw() {
 
 // dark, middle, light
 const colors = ['#1b2e65','#4a6cce', '#9aade4'];
+const strokeColor = colors[0];
 
 const u = 15;
 const theta = Math.PI/6;
@@ -122,12 +123,17 @@ function drawShape(ctx, x, y, u, points, fill) {
 
   ctx.beginPath();
   ctx.fillStyle = fill;
+  if (fill != strokeColor) {
+    ctx.strokeStyle = strokeColor;
+  }
+
   ctx.moveTo(points[0][0] * u + x, points[0][1] * u + y);
   for (var i = 1; i < points.length; i++) {
     ctx.lineTo(points[i][0] * u + x, points[i][1] * u + y);
   }
   ctx.closePath();
   ctx.fill();
+  ctx.stroke();
 }
 
 function drawSquares(cHeight, cWidth, ctx) {
