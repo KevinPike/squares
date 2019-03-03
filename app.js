@@ -17,27 +17,27 @@ function drawSquareInSquare(cHeight, cWidth, ctx, u) {
   let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
   let x = u * 10; y = u * 10;
 
-  drawShape(ctx, x, y, [
-    [0,0],
-    [-5*u, 3*u],
-    [-3*u, 4*u],
-    [0,2*u],
-    [3*u,4*u],
-    [5*u, 3*u],
-    [0,0],
+  drawShape(ctx, x, y, u, [
+    [0, 0],
+    [-5, 3],
+    [-3, 4],
+    [0, 2],
+    [3, 4],
+    [5, 3],
+    [0, 0],
   ], colors[1]);
 }
 
-function drawShape(ctx, x, y, points, fill) {
+function drawShape(ctx, x, y, u, points, fill) {
   if (!points.length) {
     return;
   }
 
   ctx.beginPath();
   ctx.fillStyle = fill;
-  ctx.moveTo(points[0][0] + x, points[0][1] + y);
+  ctx.moveTo(points[0][0] * u + x, points[0][1] * u + y);
   for (var i = 1; i < points.length; i++) {
-    ctx.lineTo(points[i][0] + x, points[i][1] + y);
+    ctx.lineTo(points[i][0] * u + x, points[i][1] * u + y);
   }
   ctx.closePath();
   ctx.fill();
@@ -62,28 +62,28 @@ function drawSquares(cHeight, cWidth, ctx, u) {
 
       let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
 
-      drawShape(ctx, x, y, [
+      drawShape(ctx, x, y, u, [
         [0, 0],
-        [2 * u, u],
-        [4 * u, 0],
-        [2 * u, -u],
+        [2, 1],
+        [4, 0],
+        [2, -1],
         [0, 0]
       ], colors[0]);
 
-      drawShape(ctx, x, y, [
+      drawShape(ctx, x, y, u, [
         [0, 0],
-        [2 * u, u],
-        [2 * u, 3 * u],
-        [0, 2 * u],
+        [2, 1],
+        [2, 3],
+        [0, 2],
         [0, 0]
       ], colors[2]);
 
-      drawShape(ctx, x, y, [
-        [4 * u, 0],
-        [4 * u, 2 * u],
-        [2 * u, 3 * u],
-        [2 * u, 1 * u],
-        [4 * u, 0]
+      drawShape(ctx, x, y, u, [
+        [4, 0],
+        [4, 2],
+        [2, 3],
+        [2, 1],
+        [4, 0]
       ], colors[1]);
     }
   }
