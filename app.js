@@ -10,6 +10,47 @@ function draw() {
   var ctx = c.getContext("2d");
   var u = 15;
 
+  drawSquares(cHeight, cWidth, ctx, u);
+}
+
+function drawSquareInSquare(cHeight, cWidth, ctx, u) {
+  let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
+  let x = u * 10; y = u * 10;
+
+  drawShape(ctx, [
+    [x,y],
+    [-5*u+x, 3*u+y],
+    [-3*u+x, 4*u+y],
+    [x,2*u+y],
+    [3*u+x,4*u+y],
+    [5*u+x, 3*u+y],
+    [x,y],
+  ], colors[1]);
+}
+
+function twoDPointFunc(func, point) {
+  if (!point.length || point.length != 2 || !func) {
+    return;
+  }
+  func(point[0], point[1]);
+}
+
+function drawShape(ctx, points, fill) {
+  if (!points.length) {
+    return;
+  }
+
+  ctx.beginPath();
+  ctx.fillStyle = fill;
+  twoDPointFunc(ctx.moveTo.bind(ctx), points[0]);
+  for (var i = 1; i < points.length; i++) {
+    twoDPointFunc(ctx.lineTo.bind(ctx), points[i]);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawSquares(cHeight, cWidth, ctx, u) {
   function x_coord(i, j, u) {
     if (!j) {
       j = 0;
@@ -26,50 +67,31 @@ function draw() {
       var x = x_coord(i, j, u);
       var y = y_coord(j, u);
 
-      ctx.beginPath();
-      ctx.fillStyle = '#45ADFF';
-      // x, y
-      // move to point 1
-      ctx.moveTo(0 * u + x, 0 * u + y);
-      // line 1
-      ctx.lineTo(2 * u + x, u + y);
-      // line 2
-      ctx.lineTo(4 * u + x, 0 * u + y);
-      // line 8
-      ctx.lineTo(2 * u + x, y - u);
-      // line 9
-      ctx.moveTo(0 * u + x, 0 * u + y);
-      ctx.closePath();
-      ctx.fill();
+      let colors = ['#3583C1', '#3A90D5', '#45ADFF'];
 
-      ctx.beginPath();
-      ctx.fillStyle = '#3A90D5';
-      ctx.moveTo(0 * u + x, 0 * u + y);
-      // line 1
-      ctx.lineTo(2 * u + x, u + y);
-      // line 7
-      ctx.lineTo(2 * u + x, 3 * u + y)
-      // line 5
-      ctx.lineTo(0 * u + x, 2 * u + y);
-      // line 6
-      ctx.lineTo(0 * u + x, 0 * u + y);
-      ctx.closePath()
-      ctx.fill();
+      drawShape(ctx, [
+        [x, y],
+        [2 * u + x, u + y],
+        [4 * u + x, y],
+        [2 * u + x, y - u],
+        [x, y]
+      ], colors[0]);
 
+      drawShape(ctx, [
+        [x, y],
+        [2 * u + x, u + y],
+        [2 * u + x, 3 * u + y],
+        [x, 2 * u + y],
+        [x, y]
+      ], colors[2]);
 
-      ctx.beginPath();
-      ctx.fillStyle = '#3583C1';
-      ctx.moveTo(4 * u + x, 0 * u + y);
-      // line 3
-      ctx.lineTo(4 * u + x, 2 * u + y);
-      // line 4
-      ctx.lineTo(2 * u + x, 3 * u + y);
-      // line 7
-      ctx.lineTo(2 * u + x, 1 * u + y);
-      // line 2
-      ctx.lineTo(4 * u + x, 0 * u + y);
-      ctx.closePath();
-      ctx.fill();
+      drawShape(ctx, [
+        [4 * u + x, y],
+        [4 * u + x, 2 * u + y],
+        [2 * u + x, 3 * u + y],
+        [2 * u + x, 1 * u + y],
+        [4 * u + x, y]
+      ], colors[1]);
     }
   }
 }
