@@ -1,3 +1,5 @@
+// Import math utilities
+import { theta, adjacent, opposite, hypotenuse, rotate, x_coord, y_coord } from './math.js';
 
 let clickCounter = 0;
 let u = 15;
@@ -32,22 +34,6 @@ function draw() {
 // dark, middle, light
 const colors = ['#1b2e65','#4a6cce', '#9aade4'];
 const strokeColor = colors[0];
-
-const theta = Math.PI/6;
-const adjacent = 2;
-const opposite = adjacent * Math.tan(theta);
-const hypotenuse = Math.sqrt(adjacent * adjacent + opposite * opposite);
-
-function rotate(points, theta) {
-  return points.map(function(point) {
-    const x = point[0];
-    const y = point[1];
-    return [
-      x * Math.cos(theta) - y * Math.sin(theta),
-      y * Math.cos(theta) + x * Math.sin(theta)
-    ];
-  });
-}
 
 function drawSquareInSquare(cHeight, cWidth, ctx) {
 
@@ -138,21 +124,10 @@ function drawShape(ctx, x, y, u, points, fill) {
 }
 
 function drawSquares(cHeight, cWidth, ctx) {
-  function x_coord(i, j) {
-    if (!j) {
-      j = 0;
-    }
-    return i * u * 2 * adjacent + (j % 2) * -adjacent * u;
-  }
-
-  function y_coord(j) {
-    return j * u * (hypotenuse * (1 + Math.cos(2 * theta)));
-  }
-
-  for (var i = 0; x_coord(i, j) < cWidth + 2 * u; i++) {
-    for (var j = 0; y_coord(j) < cHeight + 2 * u; j++) {
-      var x = x_coord(i, j);
-      var y = y_coord(j);
+  for (var i = 0; x_coord(i, 0, u) < cWidth + 2 * u; i++) {
+    for (var j = 0; y_coord(j, u) < cHeight + 2 * u; j++) {
+      var x = x_coord(i, j, u);
+      var y = y_coord(j, u);
 
       const squareFace = [
         [0, 0],
